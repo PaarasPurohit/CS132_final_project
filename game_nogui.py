@@ -30,7 +30,9 @@ def start_game():
     print("Welcome to the Number Guessing Game!")
     print("I'm thinking of a number between 1 and 100.")
 
-    while True:
+    playing = True
+
+    while playing:
         try:
             guess = int(input("\nEnter your guess: "))
             history_stack.push(guess)
@@ -42,7 +44,7 @@ def start_game():
             else:
                 print(f"Congratulations! You guessed it in {history_stack.size} attempts.")
                 print(f"Your guess path (newest first): {history_stack.display_history()}")
-                break
+                playing = False
         except ValueError:
             print("Invalid input. Please enter an integer.")
 
