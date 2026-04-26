@@ -282,7 +282,9 @@ def restart_game(self):
 
 The rest of the attempt logic included creating a ```MAX_ATTEMPTS``` constant (set to 10), creating a new label for the attempts that remain, and revealing the number when the attempts are done.
 
-### Conclusion
+### Conclusion & Testing
+
+![demonstration](<Screenshot 2026-04-26 at 17.51.24.png>)
 
 Any simple project can be enhanced not for the sake of optimzation always, but sometimes to demonstrate a skill that someone might have learned. Classes and stacks aren't a required feature for a number-guessing game, but to show my understanding of those concepts learned in CS 132, we can be challenged to implement them, which was my goal with this project.
 

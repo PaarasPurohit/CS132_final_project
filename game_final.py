@@ -1,6 +1,8 @@
 import random
 import tkinter as tk
 
+MAX_ATTEMPTS = 10
+
 class Node:
     def __init__(self, data):
         self.data = data
@@ -44,21 +46,16 @@ class GuessingGameGUI:
         self.secret_number = random.randint(1, self.max_number)
         self.history_stack = Stack()
 
-        self.label_title = tk.Label(root, text="Number Guessing Game", font=("Arial", 16))
-        self.label_title.pack(pady=10)
+        tk.Label(root, text="Number Guessing Game", font=("Arial", 16)).pack(pady=10)
 
-        self.dropdown = tk.OptionMenu(
-            root, 
-            self.selected_difficulty, 
+        tk.OptionMenu(
+            root,
+            self.selected_difficulty,
             *self.difficulty_levels.keys(),
             command=self.change_difficulty
-        )
-        self.dropdown.pack(pady=5)
+        ).pack(pady=5)
 
-        self.label_instruction = tk.Label(
-            root, 
-            text=f"Guess a number (1–{self.max_number})"
-        )
+        self.label_instruction = tk.Label(root, text=f"Guess a number (1–{self.max_number})")
         self.label_instruction.pack(pady=5)
 
         self.entry_guess = tk.Entry(root)
@@ -67,11 +64,13 @@ class GuessingGameGUI:
         self.button_guess = tk.Button(root, text="Submit Guess", command=self.check_guess)
         self.button_guess.pack(pady=5)
 
-        self.button_restart = tk.Button(root, text="Restart Game", command=self.restart_game)
-        self.button_restart.pack(pady=5)
+        tk.Button(root, text="Restart Game", command=self.restart_game).pack(pady=5)
 
         self.label_feedback = tk.Label(root, text="")
         self.label_feedback.pack(pady=5)
+
+        self.label_attempts = tk.Label(root, text=f"Attempts left: {MAX_ATTEMPTS}")
+        self.label_attempts.pack(pady=5)
 
         self.label_history = tk.Label(root, text="History: No guesses yet.")
         self.label_history.pack(pady=10)
@@ -83,9 +82,12 @@ class GuessingGameGUI:
     def restart_game(self):
         self.secret_number = random.randint(1, self.max_number)
         self.history_stack = Stack()
+
         self.label_feedback.config(text="")
         self.label_history.config(text="History: No guesses yet.")
         self.label_instruction.config(text=f"Guess a number (1–{self.max_number})")
+        self.label_attempts.config(text=f"Attempts left: {MAX_ATTEMPTS}")
+
         self.button_guess.config(state=tk.NORMAL)
         self.entry_guess.delete(0, tk.END)
 
@@ -101,13 +103,24 @@ class GuessingGameGUI:
 
             self.history_stack.push(guess)
 
+            attempts_used = self.history_stack.size
+            attempts_left = MAX_ATTEMPTS - attempts_used
+
             if guess < self.secret_number:
                 self.label_feedback.config(text="Too low!")
             elif guess > self.secret_number:
                 self.label_feedback.config(text="Too high!")
             else:
                 self.label_feedback.config(
-                    text=f"Correct! {self.history_stack.size} attempts."
+                    text=f"Correct! You won in {attempts_used} attempts."
+                )
+                self.button_guess.config(state=tk.DISABLED)
+
+            self.label_attempts.config(text=f"Attempts left: {attempts_left}")
+
+            if attempts_left == 0 and guess != self.secret_number:
+                self.label_feedback.config(
+                    text=f"You lost! The number was {self.secret_number}."
                 )
                 self.button_guess.config(state=tk.DISABLED)
 
